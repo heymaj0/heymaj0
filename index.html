@@ -6,7 +6,7 @@
 
 <title>heymaj0</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -16,9 +16,9 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  background: radial-gradient(circle at top, #0b0f1a, #020409);
-  color: #e5e7eb;
+  font-family: "JetBrains Mono", monospace;
+  background: #020402;
+  color: #00ff88;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,57 +26,79 @@ body {
 }
 
 .container {
-  text-align: center;
   width: 100%;
-  max-width: 420px;
-  padding: 30px;
+  max-width: 480px;
+  padding: 25px;
+}
+
+.terminal {
+  background: #000;
+  border: 1px solid #003b1f;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(0,255,136,0.15);
+  padding: 20px;
+}
+
+.header {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 15px;
 }
 
 .avatar {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
-  border: 2px solid #38bdf8;
-  box-shadow: 0 0 25px rgba(56,189,248,0.35);
-  margin-bottom: 20px;
+  border: 1px solid #00ff88;
   object-fit: cover;
+  display: block;
+  margin: 10px auto 15px;
 }
 
-h1 {
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 8px;
+.name {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 5px;
 }
 
-p {
-  font-size: 14px;
-  opacity: 0.7;
-  margin-bottom: 25px;
+.desc {
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 20px;
 }
 
 .link {
   display: block;
-  padding: 16px;
-  margin: 12px 0;
-  border-radius: 14px;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid #003b1f;
+  border-radius: 6px;
   text-decoration: none;
-  color: #e5e7eb;
-  background: rgba(15,23,42,0.6);
-  border: 1px solid rgba(56,189,248,0.15);
-  backdrop-filter: blur(6px);
-  transition: all 0.25s ease;
+  color: #00ff88;
+  transition: all 0.2s ease;
 }
 
 .link:hover {
-  border-color: #38bdf8;
-  box-shadow: 0 0 18px rgba(56,189,248,0.35);
-  transform: translateY(-2px);
+  background: #001a0d;
+  box-shadow: 0 0 10px rgba(0,255,136,0.3);
+}
+
+.cursor::after {
+  content: "_";
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0; }
 }
 
 .footer {
-  margin-top: 25px;
-  font-size: 12px;
+  margin-top: 15px;
+  font-size: 11px;
   opacity: 0.4;
+  text-align: center;
 }
 </style>
 </head>
@@ -84,21 +106,23 @@ p {
 <body>
 
 <div class="container">
+  <div class="terminal">
 
-<img src="avatar.jpg" class="avatar">
+    <div class="header">user@heymaj0:~$ profile</div>
 
-<h1>heymaj0</h1>
-<p>ciberseguridad • privacidad • tecnología</p>
+    <img src="avatar.jpg" class="avatar">
 
-<a class="link" href="#">Revisa tu huella digital</a>
-<a class="link" href="#">Protege tu privacidad</a>
-<a class="link" href="#">Asegura tus accesos</a>
-<a class="link" href="#">Mi portfolio</a>
+    <div class="name cursor">heymaj0</div>
+    <div class="desc">ciberseguridad • privacidad • tecnología</div>
 
-<div class="footer">
-minimal hacker aesthetic
-</div>
+    <a class="link" href="#">Revisa tu huella digital</a>
+    <a class="link" href="#">Protege tu privacidad</a>
+    <a class="link" href="#">Asegura tus accesos</a>
+    <a class="link" href="#">Mi portfolio</a>
 
+    <div class="footer">terminal aesthetic v1.0</div>
+
+  </div>
 </div>
 
 </body>
