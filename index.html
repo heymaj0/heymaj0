@@ -12,13 +12,24 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  font-family: "JetBrains Mono", monospace;
+  font-family:"JetBrains Mono", monospace;
   background:#020617;
   color:#38bdf8;
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
+  overflow:hidden;
+}
+
+/* fondo neuronal */
+
+canvas {
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  opacity:0.15;
+  filter:blur(1px);
 }
 
 .container {
@@ -35,13 +46,13 @@ body {
   padding:20px;
 }
 
-/* scanning bar */
+/* barra scanning */
 
 .scanbar {
   height:6px;
   background:#021526;
   border:1px solid #0ea5e9;
-  margin-bottom:10px;
+  margin-bottom:12px;
   overflow:hidden;
 }
 
@@ -58,37 +69,6 @@ body {
   from { transform:translateX(-100%); }
   to { transform:translateX(250%); }
 }
-
-/* radar */
-
-.radar {
-  width:70px;
-  height:70px;
-  border:1px solid #0ea5e9;
-  border-radius:50%;
-  margin:10px auto;
-  position:relative;
-  overflow:hidden;
-}
-
-.radar::after {
-  content:"";
-  position:absolute;
-  width:50%;
-  height:2px;
-  background:#38bdf8;
-  top:50%;
-  left:50%;
-  transform-origin:left center;
-  animation:spin 2s linear infinite;
-}
-
-@keyframes spin {
-  from { transform:rotate(0deg); }
-  to { transform:rotate(360deg); }
-}
-
-/* avatar */
 
 .avatar {
   width:90px;
@@ -125,6 +105,8 @@ body {
   opacity:0.7;
 }
 
+/* botones animados */
+
 .link {
   display:block;
   padding:12px;
@@ -135,12 +117,28 @@ body {
   color:#38bdf8;
   background:#020617;
   font-size:13px;
-  transition:all .2s;
+  transition:all .25s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+.link::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(56,189,248,0.25), transparent);
+  transform:translateX(-100%);
+  transition:.5s;
+}
+
+.link:hover::before {
+  transform:translateX(100%);
 }
 
 .link:hover {
   background:#020c1b;
-  box-shadow:0 0 12px rgba(14,165,233,0.35);
+  box-shadow:0 0 15px rgba(14,165,233,0.4);
+  transform:translateY(-2px);
 }
 
 /* logs */
@@ -164,12 +162,12 @@ body {
 
 <body>
 
+<canvas id="bg"></canvas>
+
 <div class="container">
 <div class="panel">
 
 <div class="scanbar"></div>
-
-<div class="radar"></div>
 
 <img src="avatar.jpg" class="avatar">
 
@@ -186,12 +184,12 @@ body {
 <a class="link" onclick="count(this)" href="https://haveibeenpwned.com/Passwords">Contraseñas filtradas / seguras</a>
 <a class="link" onclick="count(this)" href="https://proton.me/vpn">Navega seguro</a>
 <a class="link" onclick="count(this)" href="https://github.com/megadose/holehe">Buscar correo o usuario</a>
-<a class="link" onclick="count(this)" href="https://github.com/sherlock-project/sherlock">Ver dónde está registrado</a>
+<a class="link" onclick="count(this)" href="https://github.com/sherlock-project/sherlock">¿Dónde está registrado?</a>
 <a class="link" onclick="count(this)" href="https://www.facecheck.id/">Buscar perfiles con foto</a>
 
 <div class="logs" id="logs"></div>
 
-<div class="footer">osint dashboard v3.0</div>
+<div class="footer">osint dashboard v4.0</div>
 
 </div>
 </div>
@@ -205,6 +203,57 @@ function count(el){
   log.prepend(line);
   if(log.children.length > 5) log.removeChild(log.lastChild);
 }
+
+/* fondo neuronal leve */
+
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+let points = Array.from({length:40},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  vx:(Math.random()-0.5)*0.3,
+  vy:(Math.random()-0.5)*0.3
+}));
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  for(let p of points){
+    p.x+=p.vx;
+    p.y+=p.vy;
+
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
+    ctx.fillStyle="#38bdf8";
+    ctx.fill();
+  }
+
+  for(let i=0;i<points.length;i++){
+    for(let j=i+1;j<points.length;j++){
+      let dx=points[i].x-points[j].x;
+      let dy=points[i].y-points[j].y;
+      let dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<120){
+        ctx.strokeStyle="rgba(56,189,248,0.08)";
+        ctx.beginPath();
+        ctx.moveTo(points[i].x,points[i].y);
+        ctx.lineTo(points[j].x,points[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
 </script>
 
 </body>
