@@ -105,6 +105,22 @@ canvas {
   opacity:0.7;
 }
 
+  .social-btn{
+  display:inline-block;
+  padding:6px 12px;
+  border:1px solid #0ea5e9;
+  border-radius:6px;
+  margin:4px;
+  font-size:12px;
+  text-decoration:none;
+  color:#38bdf8;
+  transition:.25s;
+}
+
+.social-btn:hover{
+  background:#020c1b;
+  box-shadow:0 0 10px rgba(56,189,248,0.5);
+}
 /* botones animados */
 
 .link {
@@ -122,6 +138,25 @@ canvas {
   overflow:hidden;
 }
 
+  .community{
+  display:block;
+  padding:14px;
+  margin:12px 0;
+  border-radius:6px;
+  text-decoration:none;
+  font-size:14px;
+  text-align:center;
+  background:linear-gradient(90deg,#06b6d4,#22c55e);
+  color:#020617;
+  font-weight:600;
+  transition:.25s;
+}
+
+.community:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 20px rgba(34,197,94,0.6);
+}
+  
 .link::before {
   content:"";
   position:absolute;
@@ -176,8 +211,8 @@ canvas {
 <div class="desc">Investiga mejor. Crece con estrategia. Protégete en digital</div>
 
 <div class="socials">
-<a href="https://www.instagram.com/heymaj0/" target="_blank">[IG]</a>
-<a href="https://www.tiktok.com/@hey_maj0" target="_blank">[TT]</a>
+<a class="social-btn" href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
+<a class="social-btn" href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
 </div>
 <a class="link" onclick="count(this)" href=#>Mira tu huella digital (próximamente)</a>
 <a class="link" onclick="count(this)" href="https://monitor.firefox.com/">Vigilar brechas</a>
@@ -186,6 +221,9 @@ canvas {
 <a class="link" onclick="count(this)" href="https://github.com/megadose/holehe">Buscar correo o usuario</a>
 <a class="link" onclick="count(this)" href="https://github.com/sherlock-project/sherlock">¿Dónde está registrado?</a>
 <a class="link" onclick="count(this)" href="https://www.facecheck.id/">Buscar perfiles con foto</a>
+<a class="community" onclick="count(this)" href="https://t.me/+qI9eFrTYhYwyMDQx" target="_blank">
+Entrar a la comunidad OSINT
+</a>
 
 <div class="logs" id="logs"></div>
 
