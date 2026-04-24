@@ -224,6 +224,43 @@ canvas {
   margin-top:4px;
   letter-spacing:1px;
 }
+
+  .dropdown {
+  position: relative;
+}
+
+.dropdown-btn {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  margin-top: -4px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(14,165,233,0.4);
+  border-radius: 6px;
+  background: #020c1b;
+  overflow: hidden;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 10px 14px;
+  color: #38bdf8;
+  text-decoration: none;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(14,165,233,0.15);
+}
+
+.dropdown-content a:hover {
+  background: rgba(56,189,248,0.08);
+}
+
+.dropdown-content.show {
+  display: block;
+}
 </style>
 </head>
 
@@ -246,6 +283,19 @@ canvas {
 <a class="social-btn" href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
 <a class="social-btn" href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
 <a class="social-btn" href="https://www.linkedin.com/in/mariaartistcode" target="_blank">LinkedIn</a>
+</div>
+<div class="dropdown">
+  <button class="link dropdown-btn" onclick="toggleDropdown()">
+    Sistemas operativos y distros ▾
+  </button>
+
+  <div id="osDropdown" class="dropdown-content">
+    <a onclick="count(this)" href="https://www.kali.org/" target="_blank">Kali Linux</a>
+    <a onclick="count(this)" href="https://www.parrotsec.org/" target="_blank">Parrot OS</a>
+    <a onclick="count(this)" href="https://ubuntu.com/" target="_blank">Ubuntu</a>
+    <a onclick="count(this)" href="https://tails.net/" target="_blank">Tails</a>
+    <a onclick="count(this)" href="https://www.debian.org/" target="_blank">Debian</a>
+  </div>
 </div>
 <a class="link" onclick="count(this)" href=#>Mira tu huella digital (próximamente)</a>
 <a class="link" onclick="count(this)" href="https://monitor.firefox.com/">Vigilar brechas</a>
@@ -333,6 +383,10 @@ function draw(){
 }
 
 draw();
+
+  function toggleDropdown(){
+  document.getElementById("osDropdown").classList.toggle("show");
+}
 </script>
 
 </body>
