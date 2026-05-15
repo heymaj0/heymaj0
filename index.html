@@ -792,6 +792,61 @@
     border-radius: 26px;
   }
 }
+
+.whatsapp-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 30;
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: #ffffff;
+  box-shadow: 0 0 28px rgba(37, 211, 102, 0.35);
+  border: 1px solid rgba(255,255,255,0.14);
+  transition: 0.25s ease;
+}
+
+.whatsapp-float:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 0 34px rgba(37, 211, 102, 0.45);
+}
+
+.whatsapp-float svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
+
+.visit-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  color: var(--muted);
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.visit-counter strong {
+  color: var(--cyan);
+  font-weight: 700;
+}
+
+.visit-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--green);
+  box-shadow: 0 0 10px var(--green);
+}
   </style>
 </head>
 
@@ -1060,24 +1115,35 @@
   </main>
 
   <footer class="container">
-    <div class="footer-inner">
-      <div>
-        <strong>heymaj0</strong>
-        <p style="margin-top: 8px;">OSINT · Cyber · Tech Education</p>
-      </div>
+  <div class="footer-inner">
+    <div>
+      <strong>heymaj0</strong>
+      <p style="margin-top: 8px;">OSINT · Cyber · Tech Education</p>
 
-      <div class="socials">
-        <a href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
-        <a href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
-        <a href="https://www.linkedin.com/in/mariaartistcode" target="_blank">LinkedIn</a>
-        <a href="https://www.youtube.com/@Hey_Majo" target="_blank">YouTube</a>
+      <div class="visit-counter" id="visitCounter">
+        <span class="visit-dot"></span>
+        <span>Visitas: <strong id="visitCount">240</strong></span>
       </div>
     </div>
-  </footer>
 
-  <a class="whatsapp-float" href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20heymaj0" target="_blank">
-    W
-  </a>
+    <div class="socials">
+      <a href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
+      <a href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
+      <a href="https://www.linkedin.com/in/mariaartistcode" target="_blank">LinkedIn</a>
+      <a href="https://www.youtube.com/@Hey_Majo" target="_blank">YouTube</a>
+    </div>
+  </div>
+</footer>
+
+<a class="whatsapp-float"
+   href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20heymaj0"
+   target="_blank"
+   aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path fill="currentColor" d="M19.11 17.27c-.27-.14-1.58-.78-1.82-.87-.24-.09-.42-.14-.59.14-.18.27-.68.87-.84 1.04-.15.18-.31.2-.58.07-.27-.14-1.13-.42-2.15-1.34-.8-.71-1.33-1.58-1.49-1.85-.15-.27-.02-.41.11-.54.12-.12.27-.31.41-.46.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.59-1.42-.81-1.95-.21-.5-.43-.43-.59-.44h-.5c-.18 0-.45.07-.68.31-.24.27-.91.89-.91 2.17s.93 2.52 1.05 2.7c.14.18 1.83 2.79 4.43 3.92.62.27 1.11.43 1.49.55.63.2 1.21.17 1.67.1.51-.07 1.58-.64 1.8-1.26.22-.62.22-1.15.15-1.26-.06-.11-.24-.18-.51-.31z"/>
+    <path fill="currentColor" d="M16.03 5.33c-5.82 0-10.55 4.71-10.55 10.51 0 1.85.48 3.66 1.4 5.26l-1.49 5.45 5.59-1.46a10.6 10.6 0 0 0 5.05 1.29h.01c5.81 0 10.54-4.71 10.54-10.52 0-2.81-1.09-5.45-3.08-7.43a10.46 10.46 0 0 0-7.47-3.1zm0 19.22h-.01a8.8 8.8 0 0 1-4.47-1.22l-.32-.19-3.32.87.89-3.24-.21-.34a8.7 8.7 0 0 1-1.34-4.59c0-4.84 3.95-8.78 8.81-8.78 2.35 0 4.56.91 6.22 2.57a8.72 8.72 0 0 1 2.57 6.22c0 4.85-3.95 8.79-8.82 8.79z"/>
+  </svg>
+</a>
 
   <script>
     const canvas = document.getElementById("bg");
@@ -1172,6 +1238,26 @@
         heroLogs.removeChild(heroLogs.lastElementChild);
       }
     }, 2600);
+    
+  async function loadVisitCounter() {
+    const counterEl = document.getElementById("visitCount");
+    if (!counterEl) return;
+
+    try {
+      const res = await fetch("https://api.countapi.xyz/hit/heymaj0/landing");
+      const data = await res.json();
+
+      // Arranca visualmente desde ~240
+      const baseOffset = 239;
+      counterEl.textContent = data.value + baseOffset;
+    } catch (error) {
+      counterEl.textContent = "240";
+      console.error("No se pudo cargar el contador:", error);
+    }
+  }
+
+  loadVisitCounter();
+
   </script>
 </body>
 </html>
