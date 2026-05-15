@@ -905,6 +905,19 @@
     padding: 0 12px !important;
   }
 }
+
+.hitweb-visual {
+  gap: 9px;
+}
+
+.hitweb-img {
+  height: 18px;
+  width: auto;
+  display: inline-block;
+  filter: brightness(1.15) contrast(1.1) saturate(1.1);
+  opacity: 0.95;
+  transform: translateY(1px);
+}
   </style>
 </head>
 
@@ -1180,9 +1193,15 @@
       <strong>heymaj0</strong>
       <p style="margin-top: 8px;">OSINT · Cyber · Tech</p>
 
-    <div class="visit-counter" id="visitCounter">
+   <div class="visit-counter hitweb-visual">
   <span class="visit-dot"></span>
-  <span>Visitas: <strong id="visitCount">...</strong></span>
+  <span>Visitas:</span>
+
+  <img 
+    src="https://hitwebcounter.com/counter/counter.php?page=21483805&style=0006&nbdigits=4&type=page&initCount=240"
+    alt="contador de visitas"
+    class="hitweb-img"
+  >
 </div>
     </div>
 
@@ -1300,54 +1319,31 @@
     }, 2600);
 
 
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import {
-    getDatabase,
-    ref,
-    runTransaction
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-
-  const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_PROYECTO.firebaseapp.com",
-    databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
-    projectId: "TU_PROYECTO",
-    storageBucket: "TU_PROYECTO.appspot.com",
-    messagingSenderId: "TU_SENDER_ID",
-    appId: "TU_APP_ID"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-
   async function loadVisitCounter() {
     const counterEl = document.getElementById("visitCount");
     if (!counterEl) return;
 
-    const counterRef = ref(database, "heymaj0/visitas");
+    const baseVisits = 240;
 
     try {
-      const result = await runTransaction(counterRef, (currentValue) => {
-        if (currentValue === null) {
-          return 240;
-        }
-
-        return currentValue + 1;
+      const response = await fetch("https://counterapi.dev/api/v1/heymaj0-web/visitas-home/up", {
+        cache: "no-store"
       });
 
-      if (result.committed) {
-        counterEl.textContent = result.snapshot.val();
-      } else {
-        counterEl.textContent = "240";
-      }
+      const data = await response.json();
+
+      const apiCount = Number(data.count || data.value || 0);
+      const totalVisits = baseVisits + apiCount;
+
+      counterEl.textContent = totalVisits;
     } catch (error) {
-      counterEl.textContent = "240";
-      console.warn("No se pudo actualizar el contador:", error);
+      counterEl.textContent = baseVisits;
+      console.warn("No se pudo cargar el contador:", error);
     }
   }
 
-  loadVisitCounter();
 
+  loadVisitCounter();
 
   </script>
 </body>
