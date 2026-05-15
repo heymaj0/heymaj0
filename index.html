@@ -1,423 +1,1177 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>heymaj0 // OSINT Dashboard</title>
+  <title>heymaj0 // OSINT · Cyber · Tech Education</title>
 
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="description" content="Landing personal de heymaj0: OSINT, ciberseguridad, privacidad digital, marketing, tecnología y educación digital.">
 
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-body {
-  font-family:"JetBrains Mono", monospace;
-  background:#020617;
-  color:#38bdf8;
-  display:flex;
-  justify-content:center;
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #07111f;
+      --panel: rgba(15, 23, 42, 0.72);
+      --panel-strong: rgba(2, 6, 23, 0.9);
+      --cyan: #38bdf8;
+      --blue: #0ea5e9;
+      --green: #22c55e;
+      --violet: #8b5cf6;
+      --white: #f8fafc;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.18);
+      --glass: rgba(255, 255, 255, 0.06);
+      --shadow-cyan: 0 0 35px rgba(56, 189, 248, 0.18);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --max: 1180px;
+    }
 
-  /* cambia esto */
-  align-items:flex-start;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-  min-height:100vh;
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* cambia esto */
-  overflow-y:auto;
-  overflow-x:hidden;
+    body {
+      font-family: "JetBrains Mono", monospace;
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.14), transparent 32%),
+        radial-gradient(circle at 80% 20%, rgba(14, 165, 233, 0.10), transparent 28%),
+        var(--bg);
+      color: var(--white);
+      overflow-x: hidden;
+    }
 
-  padding:20px 0;
+    canvas#bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      opacity: 0.20;
+      filter: blur(0.4px);
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 46px 46px;
+      mask-image: linear-gradient(to bottom, black, transparent 88%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(100% - 32px, var(--max));
+      margin-inline: auto;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 14px;
+      z-index: 20;
+      margin-top: 14px;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: var(--bg);
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.45);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+    }
+
+    .nav-cta {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #020617;
+      font-weight: 700;
+      font-size: 12px;
+      box-shadow: var(--shadow-cyan);
+    }
+
+    .hero {
+      min-height: calc(100vh - 80px);
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      align-items: center;
+      gap: 48px;
+      padding: 80px 0 60px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.08);
+      color: var(--cyan);
+      font-size: 12px;
+      margin-bottom: 20px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 16px var(--green);
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.95;
+      letter-spacing: -0.08em;
+      max-width: 780px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--white), var(--cyan), var(--green));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy {
+      margin-top: 22px;
+      max-width: 680px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      font-size: 13px;
+      font-weight: 700;
+      overflow: hidden;
+      transition: 0.25s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #020617;
+      border-color: transparent;
+      box-shadow: var(--shadow-cyan);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.04);
+      color: var(--white);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 34px;
+      max-width: 650px;
+    }
+
+    .stat-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid var(--line);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 20px;
+      color: var(--cyan);
+      margin-bottom: 4px;
+    }
+
+    .stat-card span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .terminal-card {
+      position: relative;
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(180deg, rgba(15,23,42,0.88), rgba(2,6,23,0.88));
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      box-shadow: var(--shadow-cyan), 0 24px 80px rgba(0,0,0,0.36);
+      overflow: hidden;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--cyan);
+      opacity: 0.8;
+    }
+
+    .terminal-title {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .scanbar {
+      height: 5px;
+      background: rgba(56,189,248,0.05);
+      overflow: hidden;
+    }
+
+    .scanbar::after {
+      content: "";
+      display: block;
+      height: 100%;
+      width: 38%;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(280%); }
+    }
+
+    .terminal-body {
+      padding: 22px;
+    }
+
+    .avatar-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid var(--line);
+      margin-bottom: 18px;
+    }
+
+    .avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 1px solid rgba(56,189,248,0.55);
+      box-shadow: 0 0 24px rgba(56,189,248,0.22);
+    }
+
+    .avatar-info h2 {
+      font-size: 18px;
+    }
+
+    .avatar-info p {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .logs {
+      display: grid;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .log-line {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(2,6,23,0.6);
+      border: 1px solid rgba(56,189,248,0.12);
+    }
+
+    .log-line span {
+      color: var(--green);
+    }
+
+    section {
+      padding: 84px 0;
+    }
+
+    .section-head {
+      max-width: 760px;
+      margin-bottom: 30px;
+    }
+
+    .section-kicker {
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 11px;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.05;
+      letter-spacing: -0.06em;
+    }
+
+    .section-desc {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      padding: 22px;
+      min-height: 190px;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.045);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      transition: 0.25s ease;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      background: radial-gradient(circle at top right, rgba(56,189,248,0.20), transparent 42%);
+      transition: 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(56,189,248,0.42);
+      box-shadow: var(--shadow-cyan);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: rgba(56,189,248,0.12);
+      color: var(--cyan);
+      margin-bottom: 18px;
+    }
+
+    .card h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .light-section {
+      background: linear-gradient(180deg, rgba(248,250,252,0.96), rgba(226,232,240,0.96));
+      color: #020617;
+      border-radius: 42px;
+      margin: 30px auto;
+      width: min(100% - 24px, 1280px);
+    }
+
+    .light-section .section-desc,
+    .light-section .card p {
+      color: #475569;
+    }
+
+    .light-section .card {
+      background: rgba(255,255,255,0.86);
+      border-color: rgba(15,23,42,0.08);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.08);
+    }
+
+    .resources-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+    }
+
+    .resource-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .resource-link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 15px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--line);
+      color: var(--white);
+      transition: 0.22s ease;
+    }
+
+    .resource-link:hover {
+      transform: translateX(6px);
+      border-color: rgba(56,189,248,0.44);
+      color: var(--cyan);
+    }
+
+    .cta-band {
+      padding: 42px;
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at top right, rgba(56,189,248,0.25), transparent 38%),
+        linear-gradient(135deg, rgba(15,23,42,0.96), rgba(2,6,23,0.96));
+      border: 1px solid rgba(56,189,248,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      box-shadow: var(--shadow-cyan);
+    }
+
+    .cta-band h2 {
+      font-size: clamp(26px, 4vw, 44px);
+      line-height: 1.05;
+      letter-spacing: -0.05em;
+    }
+
+    .cta-band p {
+      margin-top: 12px;
+      color: var(--muted);
+      max-width: 640px;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    footer {
+      padding: 46px 0 34px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+
+    .socials {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .socials a {
+      padding: 9px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      transition: 0.2s ease;
+    }
+
+    .socials a:hover {
+      color: var(--cyan);
+      border-color: rgba(56,189,248,0.45);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: 0.7s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .whatsapp-float {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 30;
+      width: 56px;
+      height: 56px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      color: #020617;
+      font-weight: 900;
+      box-shadow: 0 0 28px rgba(34,197,94,0.34);
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .resources-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 56px;
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .cta-band {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100% - 22px, var(--max));
+      }
+
+      .nav-inner {
+        border-radius: 22px;
+      }
+
+      .hero {
+        gap: 28px;
+        padding: 48px 0 38px;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .stats,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        padding: 58px 0;
+      }
+
+      .terminal-body {
+        padding: 16px;
+      }
+
+      .avatar-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .light-section {
+        border-radius: 28px;
+      }
+
+      .cta-band {
+        padding: 26px;
+      }
+
+      .footer-inner {
+        flex-direction: column;
+      }
+    }
+
+    .personal-slogan {
+  margin-top: 24px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.08);
 }
 
-   .container{
-  width:100%;
-  max-width:540px;
-  padding:20px;
-  margin:auto;
-}
-
-/* fondo neuronal */
-
-canvas {
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  opacity:0.15;
-  filter:blur(1px);
-}
-
-.container {
-  width:100%;
-  max-width:540px;
-  padding:20px;
-}
-
-.panel {
-  background:#020617;
-  border:1px solid #0ea5e9;
-  border-radius:10px;
-  box-shadow:0 0 35px rgba(14,165,233,0.15);
-  padding:20px;
-}
-
-/* barra scanning */
-
-.scanbar {
-  height:6px;
-  background:#021526;
-  border:1px solid #0ea5e9;
-  margin-bottom:12px;
-  overflow:hidden;
-}
-
-.scanbar::after {
-  content:"";
-  display:block;
-  height:100%;
-  width:40%;
-  background:#38bdf8;
-  animation:scan 2s linear infinite;
-}
-
-@keyframes scan {
-  from { transform:translateX(-100%); }
-  to { transform:translateX(250%); }
-}
-
-.avatar {
-  width:90px;
-  height:90px;
-  border-radius:6px;
-  border:1px solid #0ea5e9;
-  object-fit:cover;
-  display:block;
-  margin:10px auto;
-}
-
-.name {
-  text-align:center;
-  font-size:18px;
-}
-
-.desc {
-  text-align:center;
-  font-size:12px;
-  opacity:0.65;
-  margin:4px 0;
-}
-
-.socials {
-  text-align:center;
-  margin:10px 0;
-}
-
-.socials a {
-  color:#38bdf8;
-  text-decoration:none;
-  margin:0 6px;
-  font-size:12px;
-  opacity:0.7;
-}
-
-  .social-btn{
-  display:inline-block;
-  padding:6px 12px;
-  border:1px solid #0ea5e9;
-  border-radius:6px;
-  margin:4px;
-  font-size:12px;
-  text-decoration:none;
-  color:#38bdf8;
-  transition:.25s;
-}
-
-.social-btn:hover{
-  background:#020c1b;
-  box-shadow:0 0 10px rgba(56,189,248,0.5);
-}
-/* botones animados */
-
-.link {
-  display:block;
-  padding:12px;
-  margin:8px 0;
-  border:1px solid #0ea5e9;
-  border-radius:6px;
-  text-decoration:none;
-  color:#38bdf8;
-  background:#020617;
-  font-size:13px;
-  transition:all .25s ease;
-  position:relative;
-  overflow:hidden;
-}
-
-  .community{
-  display:block;
-  padding:14px;
-  margin:12px 0;
-  border-radius:6px;
-  text-decoration:none;
-  font-size:14px;
-  text-align:center;
-  background:linear-gradient(90deg,#06b6d4,#22c55e);
-  color:#020617;
-  font-weight:600;
-  transition:.25s;
-}
-
-.community:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 20px rgba(34,197,94,0.6);
-}
-  
-.link::before {
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, transparent, rgba(56,189,248,0.25), transparent);
-  transform:translateX(-100%);
-  transition:.5s;
-}
-
-.link:hover::before {
-  transform:translateX(100%);
-}
-
-.link:hover {
-  background:#020c1b;
-  box-shadow:0 0 15px rgba(14,165,233,0.4);
-  transform:translateY(-2px);
-}
-
-/* logs */
-
-.logs {
-  font-size:10px;
-  opacity:0.5;
-  height:40px;
-  overflow:hidden;
-  margin-top:10px;
-}
-
-.footer {
-  margin-top:8px;
-  font-size:10px;
-  opacity:0.4;
-  text-align:center;
-}
-
-  .buy-btn{
-  background:linear-gradient(90deg,#22c55e,#4ade80,#38bdf8);
-  color:#020617;
-}
-
-.buy-btn:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 25px rgba(56,189,248,0.6);
-}
-
-  .visits{
-  text-align:center;
-  margin-top:12px;
-  padding:8px;
-  border:1px solid rgba(14,165,233,0.2);
-  border-radius:6px;
-  background:#020c1b;
-  box-shadow:0 0 10px rgba(14,165,233,0.1);
-}
-
-.visits img{
-  opacity:0.85;
-  filter:brightness(1.3);
-}
-
-.visits-text{
-  font-size:10px;
-  opacity:0.5;
-  margin-top:4px;
-  letter-spacing:1px;
-}
-
-  .dropdown {
-  position: relative;
-}
-
-.dropdown-btn {
-  width: 100%;
-  text-align: left;
-  cursor: pointer;
-}
-
-.dropdown-content {
-  display: none;
-  margin-top: -4px;
-  margin-bottom: 8px;
-  border: 1px solid rgba(14,165,233,0.4);
-  border-radius: 6px;
-  background: #020c1b;
-  overflow: hidden;
-}
-
-.dropdown-content a {
+.personal-slogan span {
   display: block;
-  padding: 10px 14px;
-  color: #38bdf8;
-  text-decoration: none;
+  color: var(--white);
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.personal-slogan small {
+  display: block;
+  margin-top: 8px;
+  color: var(--cyan);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.direct-links-panel {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.direct-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 86px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background:
+    linear-gradient(135deg, rgba(15, 23, 42, 0.84), rgba(2, 6, 23, 0.92));
+  border: 1px solid rgba(56, 189, 248, 0.18);
+  color: var(--white);
+  transition: 0.25s ease;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+}
+
+.direct-link strong {
+  display: block;
+  color: var(--white);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.direct-link span {
+  display: block;
+  color: var(--muted);
   font-size: 12px;
-  border-bottom: 1px solid rgba(14,165,233,0.15);
+  line-height: 1.5;
 }
 
-.dropdown-content a:hover {
-  background: rgba(56,189,248,0.08);
+.direct-link b {
+  color: var(--cyan);
+  font-size: 18px;
+  font-weight: 500;
 }
 
-.dropdown-content.show {
-  display: block;
+.direct-link:hover {
+  transform: translateY(-4px);
+  border-color: rgba(56, 189, 248, 0.48);
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.14);
 }
-</style>
+
+.direct-link:hover strong {
+  color: var(--cyan);
+}
+
+@media (max-width: 700px) {
+  .direct-links-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .direct-link {
+    min-height: auto;
+    padding: 16px;
+  }
+}
+
+.course-simple {
+  max-width: 850px;
+  padding: 42px;
+  border-radius: 34px;
+  background:
+    radial-gradient(circle at top right, rgba(56, 189, 248, 0.20), transparent 38%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.82), rgba(2, 6, 23, 0.95));
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow: 0 0 35px rgba(56, 189, 248, 0.10);
+}
+
+.course-btn {
+  margin-top: 26px;
+}
+
+@media (max-width: 640px) {
+  .course-simple {
+    padding: 26px;
+    border-radius: 26px;
+  }
+}
+  </style>
 </head>
 
 <body>
+  <canvas id="bg"></canvas>
+  <div class="noise"></div>
 
-<canvas id="bg"></canvas>
+  <header class="navbar container">
+    <div class="nav-inner">
+      <a href="#" class="brand">
+        <span class="brand-mark">h</span>
+        <span>heymaj0</span>
+      </a>
 
-<div class="container">
-<div class="panel">
+      <nav class="nav-links">
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#recursos">Recursos</a>
+        <a href="#cursos">Cursos</a>
+        <a href="#comunidad">Comunidad</a>
+      </nav>
 
-<div class="scanbar"></div>
+      <a class="nav-cta" href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20heymaj0" target="_blank">
+        WhatsApp
+      </a>
+    </div>
+  </header>
 
-<img src="avatar.jpg" class="avatar">
+  <main>
+    <section class="hero container">
+      <div class="hero-content reveal">
+        <div class="eyebrow">
+          <span class="pulse"></span>
+          OSINT · Cyber · Marketing · Educación
+        </div>
 
-<div class="name">heymaj0</div>
-<div class="desc">OSINT · Marketing · Cyber</div>
-<div class="desc">Investiga mejor. Crece con estrategia. Protégete en digital</div>
+        <h1>
+          Aprende a leer, proteger y potenciar tu mundo
+          <span class="gradient-text">digital.</span>
+        </h1>
 
-<div class="socials">
-<a class="social-btn" href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
-<a class="social-btn" href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
-<a class="social-btn" href="https://www.linkedin.com/in/mariaartistcode" target="_blank">LinkedIn</a>
-<a class="social-btn" href="https://www.youtube.com/@Hey_Majo" target="_blank">Youtube</a>
-</div>
-<div class="dropdown">
- <button class="link dropdown-btn" onclick="toggleDropdown('osDropdown')">
-    Sistemas operativos y distros ▾
-  </button>
+        <p class="hero-copy">
+          Soy heymaj0. Comparto recursos, cursos y herramientas sobre OSINT,
+          ciberseguridad, privacidad digital, marketing y tecnología para que aprendas
+          con estrategia, criterio y enfoque profesional.
+        </p>
 
-  <div id="osDropdown" class="dropdown-content">
-    <a onclick="count(this)" href="https://www.kali.org/" target="_blank">Kali Linux</a>
-    <a onclick="count(this)" href="https://www.parrotsec.org/" target="_blank">Parrot OS</a>
-    <a onclick="count(this)" href="https://ubuntu.com/" target="_blank">Ubuntu</a>
-    <a onclick="count(this)" href="https://tails.net/" target="_blank">Tails</a>
-    <a onclick="count(this)" href="https://www.debian.org/" target="_blank">Debian</a>
-     <a onclick="count(this)" href="https://www.microsoft.com/software-download/windows11" target="_blank">
-    Windows 11 (Descarga oficial)
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#recursos">Explorar recursos</a>
+          <a class="btn btn-secondary" href="#cursos">Ver cursos</a>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <strong>OSINT</strong>
+            <span>Investigación digital</span>
+          </div>
+          <div class="stat-card">
+            <strong>Cyber</strong>
+            <span>Privacidad y defensa</span>
+          </div>
+          <div class="stat-card">
+            <strong>Tech</strong>
+            <span>Herramientas y educación</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="terminal-card reveal">
+        <div class="terminal-top">
+          <div class="dots">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+          </div>
+          <span class="terminal-title">heymaj0@dashboard:~</span>
+        </div>
+
+        <div class="scanbar"></div>
+
+        <div class="terminal-body">
+          <div class="avatar-box">
+            <img src="avatar.jpg" alt="heymaj0" class="avatar">
+            <div class="avatar-info">
+              <h2>heymaj0</h2>
+              <p>OSINT · privacidad digital · marketing · herramientas tech.</p>
+            </div>
+          </div>
+
+          <div class="logs" id="heroLogs">
+            <div class="log-line"><span>[SCAN]</span> huella digital detectada</div>
+            <div class="log-line"><span>[LEARN]</span> recursos educativos cargados</div>
+            <div class="log-line"><span>[CYBER]</span> modo privacidad activo</div>
+            <div class="log-line"><span>[ACCESS]</span> comunidad disponible</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+<section id="sobre-mi" class="container reveal">
+  <div class="section-head">
+    <p class="section-kicker">Sobre mí</p>
+    <h2 class="section-title">Una marca personal entre educación, investigación digital y estrategia.</h2>
+    <p class="section-desc">
+      heymaj0 nace como un espacio para aprender tecnología desde una mirada práctica, humana y estratégica.
+      Soy COO de ArtistCod3, con más de 8 años de experiencia creando, comunicando y desarrollando proyectos
+      digitales alrededor de la educación, el marketing, la tecnología, la privacidad y la ciberseguridad.
+      <br><br>
+      Este espacio mezcla lo que hago, lo que aprendo y lo que me gusta compartir: OSINT, herramientas,
+      seguridad digital, crecimiento online y contenido útil para moverte mejor en internet.
+      Porque sí, también se trata de investigar, crecer, comunicar con estrategia… y por qué no,
+      compartir un poco más de mí en el proceso.
+    </p>
+
+    <div class="personal-slogan">
+      <span>“Te enseño a investigar, crecer y no cagarla en internet.”</span>
+      <small>Comunidad OSINT</small>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <article class="card">
+      <div class="icon">01</div>
+      <h3>OSINT educativo</h3>
+      <p>Recursos y guías para entender cómo se analiza información pública de forma ética, práctica y profesional.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon">02</div>
+      <h3>Privacidad digital</h3>
+      <p>Contenido para reducir exposición, mejorar hábitos de seguridad y proteger tu identidad en internet.</p>
+    </article>
+
+    <article class="card">
+      <div class="icon">03</div>
+      <h3>Marketing & tecnología</h3>
+      <p>Estrategias, herramientas y procesos para crecer en digital con criterio, datos y comunicación inteligente.</p>
+    </article>
+  </div>
+</section>
+
+   <section id="recursos" class="container reveal">
+  <div class="section-head">
+    <p class="section-kicker">Recursos</p>
+    <h2 class="section-title">Herramientas útiles para aprender, investigar y protegerte.</h2>
+    <p class="section-desc">
+      Una selección rápida de accesos para sistemas, privacidad, análisis OSINT y seguridad digital básica.
+    </p>
+  </div>
+
+  <div class="direct-links-panel">
+    <a class="direct-link" href="https://www.kali.org/" target="_blank">
+      <div>
+        <strong>Kali Linux</strong>
+        <span>Sistema para laboratorios de ciberseguridad.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://www.parrotsec.org/" target="_blank">
+      <div>
+        <strong>Parrot OS</strong>
+        <span>Distribución enfocada en privacidad y análisis.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://tails.net/" target="_blank">
+      <div>
+        <strong>Tails</strong>
+        <span>Sistema orientado a privacidad y navegación segura.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://www.microsoft.com/software-download/windows11" target="_blank">
+      <div>
+        <strong>Windows 11</strong>
+        <span>Descarga oficial del sistema operativo.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://monitor.firefox.com/" target="_blank">
+      <div>
+        <strong>Vigilar brechas</strong>
+        <span>Revisa si tu correo apareció en filtraciones.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://haveibeenpwned.com/Passwords" target="_blank">
+      <div>
+        <strong>Contraseñas filtradas</strong>
+        <span>Valida si una contraseña fue expuesta.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://proton.me/vpn" target="_blank">
+      <div>
+        <strong>Navega seguro</strong>
+        <span>Recurso para mejorar privacidad al navegar.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://github.com/sherlock-project/sherlock" target="_blank">
+      <div>
+        <strong>Sherlock</strong>
+        <span>Herramienta para búsqueda de usuarios en plataformas.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://github.com/megadose/holehe" target="_blank">
+      <div>
+        <strong>Holehe</strong>
+        <span>Recurso OSINT para análisis de correos en servicios públicos.</span>
+      </div>
+      <b>↗</b>
+    </a>
+
+    <a class="direct-link" href="https://www.facecheck.id/" target="_blank">
+      <div>
+        <strong>Buscar perfiles con foto</strong>
+        <span>Herramienta de búsqueda visual en fuentes públicas.</span>
+      </div>
+      <b>↗</b>
+    </a>
+  </div>
+</section>
+
+    <section id="cursos" class="container reveal">
+  <div class="course-simple">
+    <p class="section-kicker">Cursos</p>
+    <h2 class="section-title">Cursos y contenidos para aprender con enfoque práctico.</h2>
+    <p class="section-desc">
+      Accede a formaciones sobre OSINT, ciberseguridad, privacidad digital, herramientas tecnológicas
+      y habilidades digitales para crecer con más criterio en internet.
+    </p>
+
+    <a class="btn btn-primary course-btn"
+       href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20HeyMajo%20quiero%20más%20info%20de%20cursos%20de%20ciberseguridad"
+       target="_blank">
+      Comprar cursos
+    </a>
+  </div>
+</section>
+   
+
+    <section id="comunidad" class="container reveal">
+      <div class="cta-band">
+        <div>
+          <h2>Únete a la comunidad de aprendizaje digital.</h2>
+          <p>
+            Accede a recursos, avisos, herramientas, contenido educativo y rutas para seguir creciendo
+            en OSINT, privacidad, ciberseguridad y tecnología.
+          </p>
+        </div>
+
+        <a class="btn btn-primary" href="https://t.me/+qI9eFrTYhYwyMDQx" target="_blank">
+          Entrar a la comunidad
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container">
+    <div class="footer-inner">
+      <div>
+        <strong>heymaj0</strong>
+        <p style="margin-top: 8px;">OSINT · Cyber · Tech Education</p>
+      </div>
+
+      <div class="socials">
+        <a href="https://www.instagram.com/heymaj0/" target="_blank">Instagram</a>
+        <a href="https://www.tiktok.com/@hey_maj0" target="_blank">TikTok</a>
+        <a href="https://www.linkedin.com/in/mariaartistcode" target="_blank">LinkedIn</a>
+        <a href="https://www.youtube.com/@Hey_Majo" target="_blank">YouTube</a>
+      </div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float" href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20heymaj0" target="_blank">
+    W
   </a>
-  </div>
-</div>
-<div class="dropdown">
-  <button class="link dropdown-btn" onclick="toggleDropdown('toolsDropdown')">
-    Enlaces, Scripts y documentaciones ▾
-  </button>
 
-  <div id="toolsDropdown" class="dropdown-content">
-    <a onclick="count(this)" href="https://github.com/sherlock-project/sherlock" target="_blank">Sherlock</a>
-    <a onclick="count(this)" href="https://github.com/megadose/holehe" target="_blank">Holehe</a>
-    <a onclick="count(this)" href="https://www.wireshark.org/#download" target="_blank">Wireshark</a>
-  </div>
-</div>
-<a class="link" onclick="count(this)" href=#>Mira tu huella digital (próximamente)</a>
-<a class="link" onclick="count(this)" href="https://monitor.firefox.com/">Vigilar brechas</a>
-<a class="link" onclick="count(this)" href="https://haveibeenpwned.com/Passwords">Contraseñas filtradas / seguras</a>
-<a class="link" onclick="count(this)" href="https://proton.me/vpn">Navega seguro</a>
-<a class="link" onclick="count(this)" href="https://github.com/megadose/holehe">Buscar correo o usuario</a>
-<a class="link" onclick="count(this)" href="https://github.com/sherlock-project/sherlock">¿Dónde está registrado?</a>
-<a class="link" onclick="count(this)" href="https://www.facecheck.id/">Buscar perfiles con foto</a>
-<a class="community" onclick="count(this)" href="https://t.me/+qI9eFrTYhYwyMDQx" target="_blank">
-Entrar a la comunidad OSINT
-</a>
-<a class="community buy-btn" 
-href="https://wa.me/573181388818?text=Hola%20vengo%20de%20la%20web%20de%20HeyMajo%20quiero%20más%20info%20de%20cursos%20de%20ciberseguridad" 
-target="_blank">
-🚀 Adquirir cursos
-</a>
-<div class="logs" id="logs"></div>
+  <script>
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
 
-<div class="footer">osint dashboard v4.0</div>
-
-<div class="visits">
-  <img src="https://hitwebcounter.com/counter/counter.php?page=21483805&style=0006&nbdigits=4&type=page&initCount=24" />
-  <div class="visits-text">actividad registrada</div>
-</div>
-</div>
-</div>
-
-<script>
-function count(el){
-  let log = document.getElementById("logs");
-  let msg = "[LOG] click → " + el.innerText;
-  let line = document.createElement("div");
-  line.textContent = msg;
-  log.prepend(line);
-  if(log.children.length > 5) log.removeChild(log.lastChild);
-}
-
-/* fondo neuronal leve */
-
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-canvas.width = innerWidth;
-canvas.height = innerHeight;
-
-let points = Array.from({length:40},()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  vx:(Math.random()-0.5)*0.3,
-  vy:(Math.random()-0.5)*0.3
-}));
-
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  for(let p of points){
-    p.x+=p.vx;
-    p.y+=p.vy;
-
-    if(p.x<0||p.x>canvas.width)p.vx*=-1;
-    if(p.y<0||p.y>canvas.height)p.vy*=-1;
-
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,1.5,0,Math.PI*2);
-    ctx.fillStyle="#38bdf8";
-    ctx.fill();
-  }
-
-  for(let i=0;i<points.length;i++){
-    for(let j=i+1;j<points.length;j++){
-      let dx=points[i].x-points[j].x;
-      let dy=points[i].y-points[j].y;
-      let dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<120){
-        ctx.strokeStyle="rgba(56,189,248,0.08)";
-        ctx.beginPath();
-        ctx.moveTo(points[i].x,points[i].y);
-        ctx.lineTo(points[j].x,points[j].y);
-        ctx.stroke();
-      }
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
-  }
 
-  requestAnimationFrame(draw);
-}
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
 
-draw();
+    const isMobile = window.innerWidth < 640;
+    const amount = isMobile ? 32 : 70;
 
-  function toggleDropdown(id){
-  document.getElementById(id).classList.toggle("show");
-}
-</script>
+    const points = Array.from({ length: amount }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35
+    }));
 
+    function drawNetwork() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (const p of points) {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = "#38bdf8";
+        ctx.fill();
+      }
+
+      for (let i = 0; i < points.length; i++) {
+        for (let j = i + 1; j < points.length; j++) {
+          const dx = points[i].x - points[j].x;
+          const dy = points[i].y - points[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 125) {
+            ctx.strokeStyle = `rgba(56,189,248,${0.13 - dist / 1200})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(points[i].x, points[i].y);
+            ctx.lineTo(points[j].x, points[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawNetwork);
+    }
+
+    drawNetwork();
+
+    const revealItems = document.querySelectorAll(".reveal");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+        }
+      });
+    }, { threshold: 0.14 });
+
+    revealItems.forEach(item => observer.observe(item));
+
+    const logs = [
+      "[SCAN] privacidad digital activa",
+      "[OSINT] recursos cargados",
+      "[CYBER] buenas prácticas detectadas",
+      "[LEARN] nueva ruta disponible",
+      "[ACCESS] comunidad online",
+      "[SIGNAL] dashboard actualizado"
+    ];
+
+    const heroLogs = document.getElementById("heroLogs");
+
+    setInterval(() => {
+      const line = document.createElement("div");
+      line.className = "log-line";
+      line.innerHTML = `<span>${logs[Math.floor(Math.random() * logs.length)].split(" ")[0]}</span> ${logs[Math.floor(Math.random() * logs.length)].replace(/^\[[A-Z]+\]\s/, "")}`;
+      heroLogs.prepend(line);
+
+      if (heroLogs.children.length > 4) {
+        heroLogs.removeChild(heroLogs.lastElementChild);
+      }
+    }, 2600);
+  </script>
 </body>
 </html>
