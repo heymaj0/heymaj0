@@ -918,6 +918,59 @@
   opacity: 0.95;
   transform: translateY(1px);
 }
+
+.gift-resource {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 26px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.20), transparent 36%),
+    linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.96));
+  border: 1px solid rgba(56, 189, 248, 0.22);
+  box-shadow: 0 0 30px rgba(56, 189, 248, 0.10);
+}
+
+.gift-label {
+  display: inline-flex;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.24);
+  color: var(--green);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.gift-resource h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  letter-spacing: -0.04em;
+}
+
+.gift-resource p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+  max-width: 680px;
+}
+
+@media (max-width: 700px) {
+  .gift-resource {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+  }
+
+  .gift-resource .btn {
+    width: 100%;
+  }
+}
   </style>
 </head>
 
@@ -1059,6 +1112,23 @@
     </article>
   </div>
 </section>
+
+<div class="gift-resource">
+  <div>
+    <p class="gift-label">Recurso gratis</p>
+    <h3>Planeador Notion para organizar tus proyectos digitales</h3>
+    <p>
+      Descarga una plantilla práctica de Notion para planificar ideas, tareas, contenido,
+      estudios y proyectos personales de forma más ordenada.
+    </p>
+  </div>
+
+  <a class="btn btn-primary"
+     href="https://glittery-llama-d68.notion.site/Planeador-Plantillaxfhnd-36bdf9ccff3880e2bbe6e99c02c9a10b"
+     target="_blank">
+    Descargar plantilla
+  </a>
+</div>
 
    <section id="recursos" class="container reveal">
   <div class="section-head">
