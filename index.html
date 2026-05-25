@@ -924,7 +924,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 24px;
+  width: min(100%, 980px);
+  margin: 0 auto 24px;
   padding: 26px;
   border-radius: 24px;
   background:
@@ -932,6 +933,10 @@
     linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(2, 6, 23, 0.96));
   border: 1px solid rgba(56, 189, 248, 0.22);
   box-shadow: 0 0 30px rgba(56, 189, 248, 0.10);
+}
+
+.gift-resource > div:first-child {
+  max-width: 700px;
 }
 
 .gift-label {
@@ -957,13 +962,13 @@
   color: var(--muted);
   font-size: 13px;
   line-height: 1.7;
-  max-width: 680px;
 }
 
 @media (max-width: 700px) {
   .gift-resource {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
     padding: 22px;
   }
 
